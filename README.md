@@ -1,73 +1,63 @@
-# React + TypeScript + Vite
+Solid State Physics Interactive Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project Overview
 
-Currently, two official plugins are available:
+This project is an interactive, web-based 3D application designed to visualize the core concepts, crystal structures, and mathematical expressions found in Charles Kittel’s Introduction to Solid State Physics. The purpose of the application is application to transform static 2D textbook diagrams into manipulatable 3D environments to build deep, intuitive understanding.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Technology Stack
 
-## React Compiler
+Frontend Framework: React (with Vite & TypeScript)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3D Rendering: Three.js via React-Three-Fiber (R3F) and Drei
 
-## Expanding the ESLint configuration
+State Management: Zustand (for high-performance, non-rendering transient updates)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Styling: Tailwind CSS
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Architectural Philosophy
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Split-Screen Design: A persistent UI paradigm where the left panel controls mathematical parameters (theory) and the right panel reacts dynamically in 3D (visuals).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Decoupled Physics & Rendering: Crystallographic mathematics (metric matrices, vector operations, extinction rules) are kept strictly separate from Three.js components to promote testing and reusability.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+GPU Instancing: Heavy use of THREE.InstancedMesh ensures that grids of thousands of atoms render smoothly at 60 FPS without crashing the browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Current Status: Chapter 1 (Crystal Structure) Completed
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The foundational concepts of Chapter 1 have been implemented across three core interactive modules:
+
+1. 2D Lattice Explorer (Fig 3c Recreation)
+
+Concept: Distinguishing between a physical crystal structure, the mathematical lattice (identical local environments), and the basis.
+
+Interaction: Users must manually click identical atoms to define valid origin points and primitive translation vectors.
+
+Validation: The system actively rejects vectors that do not map to identical environments (preventing the "diatomic trap") and dynamically calculates 2D cross-product areas to distinguish primitive vs. conventional cells.
+
+2. 14 Bravais Lattices & Vector Explorer
+
+Concept: Primitive vs. Conventional unit cells in 3D and the 14 fundamental geometric abstractions.
+
+Interaction: Users select from the 14 Bravais lattices (automatically generated via fractional coordinates and metric matrices). For cubic systems, users can toggle between different sets of primitive vectors (e.g., symmetric vs. asymmetric).
+
+Real Crystals: Allows seamless toggling to view how real materials (NaCl, Diamond, HCP Magnesium, CsCl, etc.) map onto these abstract lattices with complex multi-atom bases.
+
+Validation: The UI calculates the scalar triple product live ($V = |\vec{a}_1 \cdot (\vec{a}_2 \times \vec{a}_3)|$) to mathematically prove how many lattice points a selected cell contains.
+
+3. Miller Indices & Crystal Planes (hkl)
+
+Concept: Defining crystal planes and understanding X-Ray Diffraction (XRD) extinction rules.
+
+Interaction: Users input $(hkl)$ values to slice through a 2x2x2 cubic lattice with translucent 3D planes.
+
+Validation: The engine calculates interplanar spacing ($d$) and dynamically colors atoms red if they lie perfectly on a plane, and gray if they fall between planes. This provides immediate visual proof of Kittel's Structure Factor ($S_G$) extinction rules (e.g., proving why the (100) peak is missing in BCC).
+
+Next Steps: Chapter 2 (Reciprocal Lattice)
+
+The immediate roadmap involves tackling wave diffraction and reciprocal space:
+
+Real vs. Reciprocal Space Viewer: Side-by-side interactive canvases showing how stretching the real lattice shrinks the reciprocal lattice.
+
+The Ewald Sphere: A 3D interactive construction showing the Laue condition ($\vec{\Delta k} = \vec{G}$).
+
+Wigner-Seitz & Brillouin Zones: Generating the complex 3D polyhedra (rhombic dodecahedrons, truncated octahedrons) that define the 1st Brillouin zones for BCC and FCC lattices.
