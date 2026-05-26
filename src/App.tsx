@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { SplitScreenLayout } from './components/layout/SplitScreenLayout'
 import  Lattice2D  from './chapters/Chapter1/Lattice2D/Lattice2D'
 import Bravais3D from './chapters/Chapter1/Bravais3D/Bravais3D'
+import MillerIndices3D from './chapters/Chapter1/MillerIndices3D'
 import './App.css'
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
                   <p>Use the controls to explore lattice geometry and symmetry.</p>
                 </div>
               }
-              visualContent={<Bravais3D />}
+              visualContent={<MillerIndices3D />}
             />
           }
         />
